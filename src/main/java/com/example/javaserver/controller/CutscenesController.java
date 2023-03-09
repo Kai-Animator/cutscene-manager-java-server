@@ -4,6 +4,7 @@ import com.example.javaserver.model.Cuts;
 import com.example.javaserver.model.Cutscenes;
 import com.example.javaserver.repository.CutsRepository;
 import com.example.javaserver.repository.CutscenesRepository;
+import com.example.javaserver.service.CutscenesService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +17,12 @@ import java.util.Optional;
 public class CutscenesController {
     private final CutscenesRepository cutscenesRepository;
     private final CutsRepository cutsRepository;
+    private final CutscenesService cutscenesService;
 
-    public CutscenesController(CutscenesRepository cutscenesRepository, CutsRepository cutsRepository) {
+    public CutscenesController(CutscenesRepository cutscenesRepository, CutsRepository cutsRepository, CutscenesService cutscenesService) {
         this.cutscenesRepository = cutscenesRepository;
         this.cutsRepository = cutsRepository;
+        this.cutscenesService = cutscenesService;
     }
     @GetMapping("/cutscenes")
     public ResponseEntity getAllCutscenes() {
@@ -65,5 +68,11 @@ public class CutscenesController {
 
             return ResponseEntity.status(HttpStatus.CREATED).body(savedCutscene);
         }
+    }
+
+    @DeleteMapping("/cutscenes/{csCode}")
+    public ResponseEntity<Void> deleteCutscene(@PathVariable String csCode) {
+        cutscenesService.deleteCutscene(csCode);
+        return ResponseEntity.noContent().build();
     }
 }
